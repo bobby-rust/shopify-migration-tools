@@ -1,8 +1,14 @@
-from os import makedirs, path, getcwd
+from os import makedirs, path, getcwd, getenv
 from bs4 import BeautifulSoup as bs
 from requests import get
+from dotenv import load_dotenv
 
-f = open('8o039clockranch.WordPress.2024-12-11.xml', 'r')
+load_dotenv()
+
+wp_media_filename = getenv("WORDPRESS_MEDIA_XML_EXPORT")
+assert wp_media_filename is not None
+
+f = open(wp_media_filename, 'r')
 
 contents = f.read()
 soup = bs(contents, 'xml')
