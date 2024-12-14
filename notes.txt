@@ -1,0 +1,97 @@
+Goals - Simplify 
+
+    How to Purchase - Easy to see links to; Cuts & Boxes, CSA, Customs/Bulk along with our Local Store/Delivery Route
+        [x] For Local store / delivery route, do you want the google maps integration on the landing page? 
+            Or just a section on the landing page that links to it?
+
+        [ ] CSA Page - form copied from old site - Community Supported Agriculture Share Options
+
+        [ ] Button on landing page for going straight to whole beef / whole pork / other options
+
+        [ ] Beef and pork are only 2 bulk options
+
+        [ ] Whole animals product pages should be a form with options which are all on old site
+
+        [ ] Main priority is customer knows what they want - they just want to find it
+
+        [ ] Analytics would be very nice
+
+        [ ] Price sheet page ported as a form with same content
+
+        [ ] Blog ported from woocommerce to shopify - dates are not important, 
+          group blog posts by year in a collection
+        
+        [ ] Price sheet page high prominence on landing page
+
+        [ ] Same buttons on hero from old site as a section with high prominence on landing page
+
+        [ ] Pickup policy removed
+
+        [ ] Shipping and return policy page less cramped
+
+        [ ] Invoice integration from Shopify site because meat weights are not exact 
+          upon placing an order
+          
+        [ ] Shop now on landing page beef chicken pork and "other" card
+
+        [ ] Of course we will iterate on these things and adjustments will be made
+
+        [ ] Cuts & Boxes, CSA, Customs/Bulk as Cards in a section on landing page under a "Best Sellers" or "Shop Favorites"?
+
+        [ ] Looking to add a section or sections to landing page to address the easy to see links to goal
+
+        [ ] Under Shop in the navbar, the 'Shop By' section does not link to anything
+
+    Our Story - Blog links? 
+        [ ] So we want a blog on the Shopify store, import all historical blog posts from wordpress site?
+
+    Shipping Info ( Winter vs Summer), FAQ's & Return Policy
+        [ ] Winter vs summer is all covered on blog posts
+        [ ] Winter vs. summer put on shipping page
+        [ ] Shipping information on landing page or card that links to more details about it
+
+        [ ] This page is just centered text could use a redesign to make it easier for users to find what they're looking for quickly.
+        [ ] Will need lots of detail here -- this is too vague to assume
+        
+        [ ] Pictures in we believe that animals were placed taken from old site
+          as a slide show
+
+        [ ] Featured collection on landing page changed to most prominent 
+
+        [ ] Texting or email for updates
+
+        [ ] Updates whenever I accomplish something
+
+        [ ] Send requests for information as a list
+
+        [ ] Weekly spreadsheet tracking work with hours
+
+    Contact Us
+        [ ] Again will need lots of clarification for this. What's wrong with current contact page? 
+        [ ] Old contact page should have all data needed for new contact page - this might be copmlete already
+
+    Price sheet page - Most visited
+        [ ] The new site does not have this page yet?
+        [ ] Do you have any ideas on how you would like this page to look?
+
+Website finished and switched over Christmas/New Year break?
+[ ] 2 week break with no orders would be a great time to switch website
+
+[ ] Clarify pay schedule - weekly, biweekly, by milestone
+
+[ ] How to track hours? 
+    - Weekly updates with tasks completed and hours spent on tasks - as a spreadsheet?
+
+[ ] customers do not like change, maintain consistency with old site is preferred
+
+[ ] Preferred method of communication and frequency for updates
+    [ ] email, text, call, daily, weekly, by milestone, whenever i make noticeable progress
+
+[ ] For accounts an order history would be great for customers to see what they ordered because they do not remember
+
+[ ] Referral rewards for both referrer and referee
+
+[ ] Points system earned points on every purchase is a good idea
+
+[ ] Fun ideas for future - do you have any? Here are some ideas that i had:
+    - Accounts with points earned from purchases + reedeem points for rewards? 
