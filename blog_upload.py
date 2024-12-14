@@ -10,22 +10,34 @@ import re
 
 load_dotenv()
 
-# Example API endpoint for retrieving all blogs
-SHOP_NAME = '8-oclock-ranch-ny'
+# Get environment vars
+SHOP_URL = getenv("SHOP_URL") 
 ACCESS_TOKEN = getenv("API_ACCESS_TOKEN") 
+SHOPIFY_CDN_BASE_URL = getenv("SHOPIFY_CDN_BASE_URL") 
+CSV_FILE_PATH = getenv("CSV_FILE_PATH")
 
-BLOGS_URL = "https://" + SHOP_NAME + ".myshopify.com/admin/api/2024-10/blogs.json"
-SHOPIFY_CDN_BASE_URL = "https://cdn.shopify.com/s/files/1/0589/1034/3304/files/"
+try:
+    assert SHOP_URL is not None
+    assert ACCESS_TOKEN is not None
+    assert SHOPIFY_CDN_BASE_URL is not None
+    assert CSV_FILE_PATH is not None
+except:
+    raise ValueError("\033[91mPlease set all required environment variables: \n\
+                SHOP_URL, \n\
+                API_ACCESS_TOKEN, \n\
+                SHOPIFY_CDN_BASE_URL, \n\
+                CSV_FILE_PATH \033[0m")
+
+BLOGS_URL = "https://" + SHOP_URL + "/admin/api/2024-10/blogs.json"
+
 # Load the CSV file
-csv_file_path = 'Posts-Export-2024-December-11-1202.csv'
-df = pd.read_csv(csv_file_path)
+df = pd.read_csv(CSV_FILE_PATH)
 
 # Shopify API credentials
 API_KEY = getenv("API_KEY") 
-BLOG_ID = '81304879240'  # ID of the blog where you want to post
 
 # Shopify API endpoint
-api_url = f"https://{SHOP_NAME}.myshopify.com/admin/api/2024-10"
+api_url = f"https://{SHOP_URL}/admin/api/2024-10"
 
 headers = {"Content-Type": "application/json", "X-Shopify-Access-Token": ACCESS_TOKEN}
 
@@ -40,6 +52,8 @@ def create_blog(year, created_at):
 
 def convert_captions(content):
     '''
+    Uses regular expressions to parse and convert WordPress [caption]s to modern
+    html equivalent
     [caption .*].*[/caption] needs to be replaced with <figure> -> <img /> ->
     <figcaption> -> </figcaption> -> </figure>
     width can be captured from [caption width="<width>"] and placed in <img
@@ -49,27 +63,30 @@ def convert_captions(content):
 
     def replacer(match):
         attrs = match.group(1).strip()
-        print("Attrs: ", attrs)
 
         inner_content = match.group(2)
 
         caption_pattern = r'(?<=<\/a>).*'
         caption = re.search(caption_pattern, inner_content)
         caption = caption.group(0) if caption is not None else ""
-        print("caption: ", caption) 
 
         img_pattern = r'(<img.*/>)'
         img = re.search(img_pattern, inner_content)
         img = img.group(0) if img is not None else ""
-        print("img: ", img)
 
         return f'<figure><div>{str(img)}</div><figcaption>{str(caption).strip()}</figcaption></figure>'
 
     return re.sub(pattern, replacer, content)
 
-
-
 def parse_content(content) -> str:
+    '''
+    Replaces img tags with the new Shopify src, unwraps img tags from <a> tags,
+    and converts WordPress [caption][/caption] to modern html equivalent
+    <figure>
+        <img src={src} />
+        <figcaption>{caption}</figcaption>
+    </figure>
+    '''
     soup = bs(content, "html.parser")
     imgs = soup.find_all("img")
     for img in imgs:
@@ -112,7 +129,6 @@ def create_article(blog_id, author, title, content, published_at, updated_at,
         "created_at": published_at 
     }
 
-    print("image data: ", image_data)
     article_data = {
         "article": {
             "author": author,
@@ -157,6 +173,9 @@ for index, row in df.iterrows():
     if title is None or title != title:
         title = "Untitled"
         status = False # if there is no title, do not publish the blog post, but keep it as a draft
+        # for now, I can't figure out a way to upload a hidden article, 
+        # I don't think shopify lets us do that, so we can't add drafts
+        continue 
 
     ## Uncomment to test specific blog posts
     # if title != "Tough Roast":
@@ -164,10 +183,8 @@ for index, row in df.iterrows():
 
     '''
     TODO: remove class attribute from images
-    For all images, if the image src attribute contains "8oclockranch", then
-    replace with https://cdn.shopify.com/s/files/1/0589/1034/3304/files/ +
+    replace src attribute with SHOPIFY_CDN_BASE_URL +  
     url.split('/')[-1]
-    also remove class attribute
     the content section of the csv is just a string, so we need beautifulsoup to
     parse it as html to manipulate it
     ''' 
@@ -213,12 +230,10 @@ for index, row in df.iterrows():
     tags = tags.replace("|", ",")
 
     image_url = row['Image Featured']
-    print("featured image url: ", image_url)
     if image_url is None or image_url != image_url:
         image_url = None
     if image_url is None or image_url == "nan":
         image_url = get_first_image(content)
-        print("get first image: ", image_url)
     
 
     excerpt = row['Excerpt']
