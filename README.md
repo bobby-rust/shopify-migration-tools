@@ -20,7 +20,6 @@ shell.
 
 ### Create your environment variables
 
--   image_uploader requires [TODO]
 -   blog_uploader requires SHOP_URL, API_ACCESS_TOKEN, SHOPIFY_CDN_BASE_URL, and CSV_FILE_PATH
     -   CSV_FILE_PATH is the path to your csv file exported with the WP_all_export tool
     -   You will need to export the following fields: [TODO]
