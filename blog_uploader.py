@@ -16,17 +16,10 @@ ACCESS_TOKEN = getenv("API_ACCESS_TOKEN")
 SHOPIFY_CDN_BASE_URL = getenv("SHOPIFY_CDN_BASE_URL") 
 CSV_FILE_PATH = getenv("CSV_FILE_PATH")
 
-try:
-    assert SHOP_URL is not None
-    assert ACCESS_TOKEN is not None
-    assert SHOPIFY_CDN_BASE_URL is not None
-    assert CSV_FILE_PATH is not None
-except:
-    raise ValueError("\033[91mPlease set all required environment variables: \n\
-                SHOP_URL, \n\
-                API_ACCESS_TOKEN, \n\
-                SHOPIFY_CDN_BASE_URL, \n\
-                CSV_FILE_PATH \033[0m")
+assert SHOP_URL is not None, "\033[91mPlease set SHOP_URL environment variable\033[0m"
+assert ACCESS_TOKEN is not None, "\033[91mPlease set API_ACCESS_TOKEN environment variable\033[0m"
+assert SHOPIFY_CDN_BASE_URL is not None, "\033[91mPlease set SHOPIFY_CDN_BASE_URL environment variable\033[0m"
+assert CSV_FILE_PATH is not None, "\033[91mPlease set CSV_FILE_PATH environment variable\033[0m"
 
 BLOGS_URL = "https://" + SHOP_URL + "/admin/api/2024-10/blogs.json"
 
