@@ -65,11 +65,10 @@ def convert_captions(content):
         attrs = match.group(1).strip()
 
         inner_content = match.group(2)
+        caption_pattern = r'(?<=\>).+'
 
-        caption_pattern = r'(?<=<\/a>).*'
         caption = re.search(caption_pattern, inner_content)
         caption = caption.group(0) if caption is not None else ""
-
         img_pattern = r'(<img.*/>)'
         img = re.search(img_pattern, inner_content)
         img = img.group(0) if img is not None else ""
@@ -94,18 +93,19 @@ def parse_content(content) -> str:
             del img.attrs["class"]
         except KeyError as e:
             print("KeyError: img does not have attribute 'class'")
-
-        img.attrs["src"] = SHOPIFY_CDN_BASE_URL + img.attrs["src"].split("/")[-1]
+        if "8oclockranch" in img.attrs["src"]:
+            img.attrs["src"] = SHOPIFY_CDN_BASE_URL + img.attrs["src"].split("/")[-1]
 
     a_tags = soup.find_all("a")
     for a in a_tags:
         try:
-            a.img.unwrap()
+            a.unwrap()
         except:
-            print("Cannot unwrap <a> tag because it does not contain an image")
+            print("Cannot unwrap <a> tag")
 
     # replace return carriage and newline with html breaks
-    return convert_captions(str(content)).replace("\r\n", "<br>")
+    c = str(soup)
+    return convert_captions(c).replace("\r\n", "<br>")
 
 
 def get_first_image(content):
@@ -147,7 +147,8 @@ def create_article(blog_id, author, title, content, published_at, updated_at,
     if response.status_code == 201:
         print(f"Created: {title}")
     else:
-        print(f"Failed to create: ", response.json())
+        print(f"Failed to create: ", title)
+        print("Due to error: ",response.json())
     return response.json()
 
 # Process each row in the CSV and create articles
@@ -177,8 +178,8 @@ for index, row in df.iterrows():
         # I don't think shopify lets us do that, so we can't add drafts
         continue 
 
-    ## Uncomment to test specific blog posts
-    # if title != "Tough Roast":
+    # Uncomment to test specific blog posts
+    # if title != "It's our News Blog!":
     #     continue
 
     '''
@@ -223,8 +224,7 @@ for index, row in df.iterrows():
         continue
 
     tags = str(row['Tags'])
-    print("pd isna tags: ", pd.isna(tags))
-    if pd.isnull(tags) or pd.isna(tags):
+    if pd.isnull(tags) or pd.isna(tags) or tags.strip() == "nan":
         tags = ""
 
     tags = tags.replace("|", ",")
@@ -252,7 +252,7 @@ for index, row in df.iterrows():
 
     # Create the article in Shopify
     result = create_article(blog_id, author, title, content, published_at,
-                            updated_at, tags, excerpt, status, image_url)
+                           updated_at, tags, excerpt, status, image_url)
 
     sleep(0.5) # Don't get rate limited
 
