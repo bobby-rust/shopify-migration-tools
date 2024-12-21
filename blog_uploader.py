@@ -70,6 +70,14 @@ def convert_captions(content):
 
     return re.sub(pattern, replacer, content)
 
+
+def clean_filename(filename):
+    pattern = r'^(.*?)(?:-scaled-e\d+)?(?:-\d+x\d+)?(\.(?:jpg|jpeg|png|gif|bmp|webp|tiff))$'
+    cleaned = re.sub(pattern, r'\1\2', filename, flags=re.IGNORECASE)
+    # Shopify silently converts all jpeg images to jpg because reasons i guess
+    jpeg_to_jpg = cleaned.replace(".jpeg", ".jpg")
+    return jpeg_to_jpg
+
 def parse_content(content) -> str:
     '''
     Replaces img tags with the new Shopify src, unwraps img tags from <a> tags,
@@ -87,7 +95,9 @@ def parse_content(content) -> str:
         except KeyError as e:
             print("KeyError: img does not have attribute 'class'")
         if "8oclockranch" in img.attrs["src"]:
-            img.attrs["src"] = SHOPIFY_CDN_BASE_URL + img.attrs["src"].split("/")[-1]
+            original_filename = img.attrs["src"].split("/")[-1]
+            filename = clean_filename(original_filename)
+            img.attrs["src"] = SHOPIFY_CDN_BASE_URL + filename 
 
     a_tags = soup.find_all("a")
     for a in a_tags:
@@ -140,8 +150,14 @@ def create_article(blog_id, author, title, content, published_at, updated_at,
     if response.status_code == 201:
         print(f"Created: {title}")
     else:
-        print(f"Failed to create: ", title)
-        print("Due to error: ",response.json())
+        error = response.json()
+        with open("errors.txt", "a") as error_log:
+            error_log.write("----------------------")
+            error_log.write(f"Failed to create blog post {title}: ")
+            error_log.write(error)
+            error_log.write("----------------------")
+            error_log.write("\n\n")
+            
     return response.json()
 
 # Process each row in the CSV and create articles
@@ -172,7 +188,7 @@ for index, row in df.iterrows():
         continue 
 
     # Uncomment to test specific blog posts
-    # if title != "It's our News Blog!":
+    # if title != "November 2024 CSA Newsletter":
     #     continue
 
     '''
