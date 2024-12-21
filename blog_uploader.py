@@ -154,7 +154,7 @@ def create_article(blog_id, author, title, content, published_at, updated_at,
         with open("errors.txt", "a") as error_log:
             error_log.write("----------------------")
             error_log.write(f"Failed to create blog post {title}: ")
-            error_log.write(error)
+            error_log.write(str(error))
             error_log.write("----------------------")
             error_log.write("\n\n")
             
