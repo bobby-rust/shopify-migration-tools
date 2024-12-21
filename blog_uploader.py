@@ -7,6 +7,7 @@ from os import getenv
 from bs4 import BeautifulSoup as bs
 from bs4 import Tag
 import re
+from pprint import pformat # for error logs
 
 load_dotenv()
 
@@ -76,7 +77,8 @@ def clean_filename(filename):
     cleaned = re.sub(pattern, r'\1\2', filename, flags=re.IGNORECASE)
     # Shopify silently converts all jpeg images to jpg because reasons i guess
     jpeg_to_jpg = cleaned.replace(".jpeg", ".jpg")
-    return jpeg_to_jpg
+    remove_scaled = jpeg_to_jpg.replace("-scaled", "")
+    return remove_scaled
 
 def parse_content(content) -> str:
     '''
@@ -153,9 +155,9 @@ def create_article(blog_id, author, title, content, published_at, updated_at,
         error = response.json()
         with open("errors.txt", "a") as error_log:
             error_log.write("----------------------\n")
-            error_log.write(f"Failed to create blog post {title}: ")
-            error_log.write(str(error))
-            error_log.write("----------------------\n")
+            error_log.write(f"Failed to create blog post {title}: \n")
+            error_log.write(pformat(error, indent=4))
+            error_log.write("\n----------------------\n")
             error_log.write("\n")
             
     return response.json()
