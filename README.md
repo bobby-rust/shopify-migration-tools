@@ -34,5 +34,5 @@ shell.
 
 _These tools are not production ready_. In its current state, this is not code I
 developed for other people to use, rather simply to achieve a goal as fast as
-possible. This is not code to be proud of. If you need help, reach out and I
+possible. If you need help, reach out and I
 will assist you as best I can.
